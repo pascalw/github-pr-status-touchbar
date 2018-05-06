@@ -29,15 +29,22 @@ const buildClient = (token) => {
 
 
 const mapPr = (data) => {
+  const commit = data["commits"]["nodes"][0]["commit"];
+
   return {
     number: data["number"],
-    updatedAt: data["updatedAt"],
-    status: data["commits"]["nodes"][0]["commit"]["status"]["state"]
+    updatedAt: commit["pushedDate"],
+    status: commit["status"]["state"]
   };
 };
 
 const recently = (now) => (pr) => {
   return pr.updatedAt <= now + (15 * 60);
+};
+
+const log = (data) => {
+  process.env.DEBUG && console.log(data);
+  return data;
 };
 
 const getRecentPRs = async (user, client) => {
@@ -48,10 +55,10 @@ const getRecentPRs = async (user, client) => {
         pullRequests(first: 3, states: OPEN, orderBy: {direction: DESC, field: UPDATED_AT}) {
           nodes {
             number
-            updatedAt
             commits(last: 1) {
               nodes {
                 commit {
+                  pushedDate
                   status {
                     state
                   }
@@ -67,8 +74,10 @@ const getRecentPRs = async (user, client) => {
 
   const now = Date.now();
 
-  const prs = result["data"]["user"]["pullRequests"]["nodes"];
-  return prs.filter(recently(now)).map(mapPr);
+  return result["data"]["user"]["pullRequests"]["nodes"]
+    .filter(recently(now))
+    .map(mapPr)
+    .map(log);
 };
 
 const statusIcon = (pr) => {
