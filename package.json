@@ -1,0 +1,17 @@
+{
+  "private": "true",
+  "name": "github-pr-status-touchbar",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "dependencies": {
+    "apollo-cache-inmemory": "^1.2.0",
+    "apollo-client": "^2.3.0",
+    "apollo-link-context": "^1.0.8",
+    "apollo-link-http": "^1.5.4",
+    "argparse": "^1.0.10",
+    "graphql": "^0.13.2",
+    "graphql-tag": "^2.9.2",
+    "node-fetch": "^2.1.2"
+  }
+}
