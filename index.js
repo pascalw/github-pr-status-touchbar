@@ -33,13 +33,13 @@ const mapPr = (data) => {
 
   return {
     number: data["number"],
-    updatedAt: commit["pushedDate"],
+    updatedAt: Date.parse(commit["pushedDate"]),
     status: commit["status"]["state"]
   };
 };
 
 const recently = (now) => (pr) => {
-  return pr.updatedAt <= now + (15 * 60);
+  return pr.updatedAt >= (now - (15 * 60 * 1000));
 };
 
 const log = (data) => {
@@ -75,8 +75,8 @@ const getRecentPRs = async (user, client) => {
   const now = Date.now();
 
   return result["data"]["user"]["pullRequests"]["nodes"]
-    .filter(recently(now))
     .map(mapPr)
+    .filter(recently(now))
     .map(log);
 };
 
