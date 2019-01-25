@@ -30,11 +30,12 @@ const buildClient = (token) => {
 
 const mapPr = (data) => {
   const commit = data["commits"]["nodes"][0]["commit"];
+  const status = commit["status"];
 
   return {
     number: data["number"],
     updatedAt: Date.parse(commit["pushedDate"]),
-    status: commit["status"]["state"]
+    status: status ? status["state"] : null
   };
 };
 
