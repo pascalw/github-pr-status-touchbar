@@ -39,6 +39,10 @@ const mapPr = (data) => {
   };
 };
 
+const withStatus = pr => {
+  return !! pr.status;
+};
+
 const recently = (now) => (pr) => {
   return pr.updatedAt >= (now - (15 * 60 * 1000));
 };
@@ -78,6 +82,7 @@ const getRecentPRs = async (user, client) => {
   return result["data"]["user"]["pullRequests"]["nodes"]
     .map(mapPr)
     .filter(recently(now))
+    .filter(withStatus)
     .map(log);
 };
 
